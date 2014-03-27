@@ -1,0 +1,146 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:tjilp" mc:Ignorable="d" x:Name="tjilpWindow" x:Class="tjilp.MainWindow"
+        Title="tjilp." Height="200" Width="350" AllowsTransparency="True" WindowStyle="None" MouseDown="Window_MouseDown" Background="LightGray" MouseLeftButtonUp="Window_MouseLeftButtonUp" Opacity="0.82" Topmost="True" ResizeMode="CanMinimize" Deactivated="tjilpWindow_Deactivated" Activated="tjilpWindow_Activated">
+    <Grid PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown">
+        <TextBox x:Name="InputBox" TextWrapping="Wrap" Text="_RANDOM MESSAGE_" UndoLimit="200" FontSize="22" SpellCheck.IsEnabled="True" Margin="0,16,0,0" TextChanged="InputBox_TextChanged" AcceptsReturn="True" PreviewKeyDown="InputBox_PreviewKeyDown" AcceptsTab="True" SelectionOpacity="0.3" Foreground="#FFB2B2B2" GotFocus="InputBox_GotFocus" LostFocus="InputBox_LostFocus" MouseWheel="InputBox_MouseWheel"/>
+        <Grid x:Name="MessageGrid" HorizontalAlignment="Left" Height="66" Margin="0,134,0,0" VerticalAlignment="Top" Width="350" IsEnabled="False" Visibility="Hidden" Opacity="0">
+            <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="68" Margin="0,-2,0,0" Stroke="#00000000" VerticalAlignment="Top" Width="350">
+                <Rectangle.Effect>
+                    <DropShadowEffect Direction="90" BlurRadius="19" Opacity="0.35"/>
+                </Rectangle.Effect>
+            </Rectangle>
+            <Button x:Name="Accept" Content="Yes" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="116" Background="#FFADFFAD" BorderBrush="#00707070" FontSize="16" Click="Accept_Click"/>
+            <Button x:Name="Decline" Content="No" HorizontalAlignment="Left" Margin="220,31,0,0" VerticalAlignment="Top" Width="120" Background="#FFFFBABA" BorderBrush="#00707070" FontSize="16" Click="Decline_Click"/>
+            <Label Content="tjilp this?" Margin="133,0,134,31" FontSize="18"/>
+        </Grid>
+        <Label x:Name="Counter" Content="0" HorizontalAlignment="Left" Height="27" Margin="302,-4,0,177" VerticalAlignment="Bottom" Width="48" HorizontalContentAlignment="Right"/>
+        <Rectangle x:Name="TutBox" Visibility="Hidden" IsEnabled="False" MouseDown="TutBox_MouseDown">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="tjilp tutorial.png"/>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Grid x:Name="PopUpGrid" HorizontalAlignment="Left" Height="66" Margin="0,134,0,0" VerticalAlignment="Top" Width="350" MouseDown="PopUpGrid_MouseDown" Opacity="0" Visibility="Hidden" IsEnabled="False">
+            <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="68" Margin="0,-2,0,0" Stroke="#00000000" VerticalAlignment="Top" Width="350" Opacity="0.88">
+                <Rectangle.Effect>
+                    <DropShadowEffect Direction="90" BlurRadius="19" Opacity="0.85" Color="LightGray"/>
+                </Rectangle.Effect>
+            </Rectangle>
+            <Label x:Name="Message" Content="&quot;MESSAGE&quot;" FontSize="22" Height="NaN" VerticalAlignment="Center" HorizontalAlignment="Center" Width="NaN" Margin="10" HorizontalContentAlignment="Center" FontFamily="Segoe UI Light" Foreground="Red"/>
+        </Grid>
+        <ScrollViewer x:Name="SettingsPanel" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Height="184" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="350" KeyDown="SettingsPanel_KeyDown" MouseLeftButtonDown="SettingsPanel_MouseLeftButtonDown" Opacity="0" Visibility="Hidden" IsEnabled="False">
+            <StackPanel HorizontalAlignment="Left" Height="184" VerticalAlignment="Top" Width="350" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" CanVerticallyScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="184" Focusable="True" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" Background="White">
+                <Label
+					Height="58" HorizontalContentAlignment="Center" FontSize="36" Content="tjilp"/>
+                <Label x:Name="CreditsLabel"
+					Height="45" HorizontalContentAlignment="Center" FontFamily="Segoe UI Light" FontSize="24" Content="by @LieuweR" MouseLeftButtonDown="Label_MouseLeftButtonDown" Cursor="Hand" HorizontalAlignment="Center"/>
+                <DockPanel Height="39" LastChildFill="False">
+                    <Label Content="TextSize" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Semilight" FontSize="22" Width="96"/>
+                    <Slider x:Name="TextSizeSlider" VerticalAlignment="Center" HorizontalAlignment="Center" Width="251" Margin="0,10,0,11" Maximum="24" Minimum="10" SmallChange="1" AutoToolTipPlacement="TopLeft" Value="22" ValueChanged="TextSizeSlider_ValueChanged" MouseRightButtonDown="TextSizeSlider_MouseRightButtonDown" IsSnapToTickEnabled="True"/>
+                </DockPanel>
+                <DockPanel Height="39" LastChildFill="False">
+                    <Label Content="OnTop" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Semilight" FontSize="22" Width="96"/>
+                    <ComboBox x:Name="TopBox" Height="39" VerticalAlignment="Top" Width="246" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectedIndex="0" SelectionChanged="TopBox_SelectionChanged">
+                        <ComboBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                                <GradientStop Color="#FFF0F0F0"/>
+                                <GradientStop Color="White"/>
+                            </LinearGradientBrush>
+                        </ComboBox.Background>
+                        <ListBoxItem Content="yes" FontSize="20"/>
+                        <ListBoxItem Content="no" FontSize="20"/>
+                    </ComboBox>
+                </DockPanel>
+            </StackPanel>
+        </ScrollViewer>
+        <Grid x:Name="StashGrid" Margin="0,16,0,0" Background="#FFEEEEEE" MouseWheel="Grid_MouseWheel" RenderTransformOrigin="0.5,0.5" Visibility="Hidden" Opacity="0" IsEnabled="False">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="190"/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Label Content="Date:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Light" FontSize="20" Margin="10,10,286,139"/>
+            <Label x:Name="DateLabel" Content="%date%" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Semilight" FontSize="22" Margin="69,10,117,132" MouseEnter="DateLabel_MouseEnter" MouseLeave="DateLabel_MouseLeave" MouseLeftButtonDown="DateLabel_MouseLeftButtonDown"/>
+            <Button x:Name="DeleteButton" Content="delete" Margin="0,10,10,132" HorizontalAlignment="Right" Width="102" FontFamily="Segoe UI Semilight" FontSize="20" Background="#FFFFE0E0" BorderBrush="#FF810000" Click="DeleteButton_Click"/>
+            <TextBlock x:Name="TweetLabel" Text="%tweet%" FontSize="27" Margin="10,57,10,10" FontFamily="Segoe UI Light" MouseDown="TweetLabel_MouseDown" TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+        </Grid>
+        <Grid x:Name="SchedularGrid" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="350" MouseWheel="SchedularGrid_MouseWheel" Visibility="Hidden" Opacity="0" IsEnabled="False">
+            <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Center" Height="200" VerticalAlignment="Center" Width="350" Stroke="#FF9C9C9C" Opacity="0.7"/>
+            <Grid x:Name="Slide1Grid" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="350">
+                <TextBox x:Name="NameInput" HorizontalAlignment="Center" Height="45" TextWrapping="Wrap" VerticalAlignment="Center" Width="206" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="name." FontFamily="Segoe UI Light" FontSize="24"/>
+            </Grid>
+            <Grid x:Name="Slide2Grid" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="350" RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform Y="200"/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Label Content="Repeat Mode" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="72,45,0,0" Width="206" Height="38" FontSize="22" FontFamily="Segoe UI Light" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <ComboBox x:Name="RepeatModeBox" HorizontalAlignment="Center" VerticalAlignment="Center" Width="206" Height="46" SelectedIndex="0" FontSize="24" FontFamily="Segoe UI Light" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="72,88,72,66" SelectionChanged="RepeatModeBox_SelectionChanged">
+                    <local:RepeatMode>None</local:RepeatMode>
+                    <local:RepeatMode>DayOfWeek</local:RepeatMode>
+                    <local:RepeatMode>Date</local:RepeatMode>
+                    <local:RepeatMode>Time</local:RepeatMode>
+                </ComboBox>
+            </Grid>
+            <Grid x:Name="DayOfWeekGrid" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="350" RenderTransformOrigin="0.5,0.5" Visibility="Hidden" IsEnabled="False">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform Y="400"/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Label Content="Repeat every:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="73,10,0,0" Width="206" Height="38" FontSize="22" FontFamily="Segoe UI Light" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <CheckBox x:Name="MondayCheck" Content="Monday" HorizontalAlignment="Left" Margin="123,53,0,0" VerticalAlignment="Top" Width="105" FontSize="16" FontFamily="Segoe UI Semilight" HorizontalContentAlignment="Right"/>
+                <CheckBox x:Name="TuesdayCheck" Content="Tuesday" HorizontalAlignment="Left" Margin="123,73,0,0" VerticalAlignment="Top" Width="105" FontSize="16" FontFamily="Segoe UI Semilight" HorizontalContentAlignment="Right"/>
+                <CheckBox x:Name="WednesdayCheck" Content="Wednesday" HorizontalAlignment="Left" Margin="123,93,0,0" VerticalAlignment="Top" Width="105" FontSize="16" FontFamily="Segoe UI Semilight" HorizontalContentAlignment="Right"/>
+                <CheckBox x:Name="ThursdayCheck" Content="Thursday" HorizontalAlignment="Left" Margin="123,113,0,0" VerticalAlignment="Top" Width="105" FontSize="16" FontFamily="Segoe UI Semilight" HorizontalContentAlignment="Right"/>
+                <CheckBox x:Name="FridayCheck" Content="Friday" HorizontalAlignment="Left" Margin="123,133,0,0" VerticalAlignment="Top" Width="105" FontSize="16" FontFamily="Segoe UI Semilight" HorizontalContentAlignment="Right"/>
+                <CheckBox x:Name="SaturdayCheck" Content="Saturday" HorizontalAlignment="Left" Margin="123,153,0,0" VerticalAlignment="Top" Width="105" FontSize="16" FontFamily="Segoe UI Semilight" HorizontalContentAlignment="Right"/>
+                <CheckBox x:Name="SundayCheck" Content="Sunday" HorizontalAlignment="Left" Margin="123,173,0,0" VerticalAlignment="Top" Width="105" FontSize="16" FontFamily="Segoe UI Semilight" HorizontalContentAlignment="Right"/>
+            </Grid>
+            <Grid x:Name="DateGrid" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="350" RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform Y="400"/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Calendar x:Name="DatePicker" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="85,10,0,0" Height="180" Width="192" RenderTransformOrigin="0.5,0.5" FirstDayOfWeek="Monday" IsTodayHighlighted="False">
+                    <Calendar.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="0.85" ScaleX="0.85"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Calendar.RenderTransform>
+                </Calendar>
+            </Grid>
+            <Grid x:Name="TimeGrid" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="350" RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform Y="600"/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <TextBox x:Name="HourBox" HorizontalAlignment="Left" Height="44" TextWrapping="Wrap" Text="00" VerticalAlignment="Top" Width="54" Margin="104,78,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" FontFamily="Segoe UI Light" UndoLimit="20" PreviewTextInput="HourOrMinuteBox_PreviewTextInput"/>
+                <TextBox x:Name="MinuteBox" HorizontalAlignment="Left" Height="44" TextWrapping="Wrap" Text="00" VerticalAlignment="Top" Width="72" Margin="183,78,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" FontFamily="Segoe UI Light" UndoLimit="20" PreviewTextInput="HourOrMinuteBox_PreviewTextInput"/>
+                <Label Content=":" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI Light" Margin="163,79,0,0" Height="44"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
