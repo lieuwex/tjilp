@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace tjilp
 {
     public static class List
     {
         // This list is made while listening to 'Savant - Sayonara' so it may be a little bit over happy.
-        public static List<string> Sentences = new List<string>()
+        public static List<string> Sentences = new List<string>
         {
             "tjilp something!",
             "<3",
@@ -15,6 +16,8 @@ namespace tjilp
             ":3",
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare aliquet augue, et bibendum eros mollis id. Nullam sit amet ipsum amet.",
             "it's " + DateTime.Now.ToString("HH:mm"),
+            "how's your " + DateTime.Now.DayOfWeek + "?", //Sorry, love that one so much. 3 Times isn't bad, is it?
+            "how's your " + DateTime.Now.DayOfWeek + "?",
             "how's your " + DateTime.Now.DayOfWeek + "?",
             "make your life awesome.",
             "go live life",
@@ -25,7 +28,7 @@ namespace tjilp
             "pentaaaaaaakiiiiiiiill",
             "luv",
             "love.",
-            new Random().Next().ToString(),
+            new Random().Next().ToString(CultureInfo.CurrentCulture),
             "3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231",
             "(:",
             "love sucks.",

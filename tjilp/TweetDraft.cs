@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace tjilp
 {
-    sealed public class TweetDraft
+    public class TweetDraft
     {
         public string Tweet { get; set; }
         public DateTime DateTime { get; set; }
         public ScheduledTweet ScheduledTweet { get; set; }
     }
 
-    sealed public class ScheduledTweet
+    public class ScheduledTweet
     {
         public string Name { get; set; }
         public DateTime LastRun { get; set; }
@@ -20,7 +20,7 @@ namespace tjilp
         public DateTime Time { get; set; }
     }
 
-    public enum RepeatMode : int
+    public enum RepeatMode
     {
         None = 0,
         DayOfWeek = 1,

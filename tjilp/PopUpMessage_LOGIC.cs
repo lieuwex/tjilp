@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
@@ -7,122 +8,104 @@ using System.Windows.Media.Animation;
 
 namespace tjilp
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private Timer Timer = new Timer();
+        TaskCompletionSource<bool> Tcs;
+        Timer Timer;
 
-        private void InitializeTimer(double ms)
+        void initializeTimer(double seconds)
         {
-            Timer.Elapsed += t_Elapsed;
-            Timer.Interval = ms;
+            if (this.Timer != null) this.Timer.Elapsed -= this.t_Elapsed;
+            this.Timer = new Timer(seconds * 1000);
+            this.Timer.Elapsed += this.t_Elapsed;
+            this.Timer.Start();
         }
 
-        private void HideMessage(bool enableAnimation)
+        void hideMessage(bool enableAnimation)
         {
-            Dispatcher.Invoke(() =>
+            this.Dispatcher.InvokeAsync(() =>
             {
-                if (!PopUpGrid.IsEnabled) return;
-
-                Timer.Stop();
+                if (!this.PopUpGrid.IsEnabled) return;
+                this.Timer.Stop();
                 if (enableAnimation)
                 {
                     if (!this.IsBeingDragged)
                     {
-                        var da = new DoubleAnimation();
-                        da.From = this.Opacity;
-                        da.To = this.InitialOpacity;
-                        da.Duration = new Duration(TimeSpan.FromSeconds(1.001));
+                        var da = new DoubleAnimation
+                        {
+                            From = this.Opacity,
+                            To = this.InitialOpacity,
+                            Duration = new Duration(TimeSpan.FromSeconds(1.001))
+                        };
                         this.BeginAnimation(OpacityProperty, da);
                     }
-
-                    var animation = new DoubleAnimation();
-                    animation.From = PopUpGrid.Opacity;
-                    animation.To = 0;
-                    animation.Duration = new Duration(TimeSpan.FromSeconds(1));
-                    PopUpGrid.BeginAnimation(OpacityProperty, animation);
-
-                    var t = new Timer();
-                    t.Interval = 1000;
-                    t.Start();
-                    t.Elapsed += (s, e) =>
+                    var animation = new DoubleAnimation
                     {
-                        Dispatcher.InvokeAsync(new Action(() =>
-                        {
-                            PopUpGrid.Visibility = System.Windows.Visibility.Hidden;
-                            PopUpGrid.IsEnabled = false;
-
-                            this.Opacity = this.InitialOpacity;
-                        }));
-                        t.Stop();
+                        From = 100,
+                        To = 0,
+                        Duration = new Duration(TimeSpan.FromSeconds(1))
                     };
+                    animation.Completed += (s, e) => this.Dispatcher.Invoke(delegate
+                    {
+                        this.PopUpGrid.Visibility = Visibility.Hidden;
+                        this.PopUpGrid.IsEnabled = false;
+                        this.Opacity = this.InitialOpacity;
+                        if (!this.Tcs.Task.IsCompleted) this.Tcs.SetResult(true);
+                    });
+                    this.PopUpGrid.BeginAnimation(OpacityProperty, animation);
                 }
                 else
                 {
                     if (!this.IsBeingDragged)
                     {
-                        var da = new DoubleAnimation();
-                        da.From = this.Opacity;
-                        da.To = this.InitialOpacity;
-                        da.Duration = new Duration(TimeSpan.FromSeconds(0.001));
+                        var da = new DoubleAnimation
+                        {
+                            From = this.Opacity,
+                            To = this.InitialOpacity,
+                            Duration = new Duration(TimeSpan.FromSeconds(0.001))
+                        };
                         this.BeginAnimation(OpacityProperty, da);
-
-                        da = new DoubleAnimation();
-                        da.From = PopUpGrid.Opacity;
-                        da.To = 0;
-                        da.Duration = new Duration(TimeSpan.FromSeconds(0.001));
-                        PopUpGrid.BeginAnimation(OpacityProperty, da);
+                        da = new DoubleAnimation
+                        {
+                            From = 100,
+                            To = 0,
+                            Duration = new Duration(TimeSpan.FromSeconds(0.001))
+                        };
+                        this.PopUpGrid.BeginAnimation(OpacityProperty, da);
                     }
-
-                    PopUpGrid.Visibility = System.Windows.Visibility.Hidden;
-                    PopUpGrid.IsEnabled = false;
-
+                    this.PopUpGrid.Visibility = Visibility.Hidden;
+                    this.PopUpGrid.IsEnabled = false;
                     this.Opacity = this.InitialOpacity;
+                    if (!this.Tcs.Task.IsCompleted) this.Tcs.SetResult(true);
                 }
             });
         }
 
-        void t_Elapsed(object sender, ElapsedEventArgs e)
+        void t_Elapsed(object sender, ElapsedEventArgs e) { this.hideMessage(true); }
+
+        public async Task ShowPopUpMessage(string message, Color color, double secondsToShow = 1.5)
         {
-            this.HideMessage(true);
-        }
-
-        public void ShowPopUpMessage(string message, Color color, double secondsToShow = 1.5)
-        {
-            if (PopUpGrid.IsEnabled) { Timer.Stop(); Timer.Start(); return; }
-
-            Message.Content = message;
-            Message.Foreground = new SolidColorBrush(color);
-
-            InitializeTimer(secondsToShow * 1000);
-
+            if (this.Tcs != null && !this.Tcs.Task.IsCompleted)
             {
-                var da = new DoubleAnimation();
-                da.From = this.Opacity;
-                da.To = 100;
-                da.Duration = new Duration(TimeSpan.FromSeconds(20));
-                this.BeginAnimation(OpacityProperty, da);
+                this.initializeTimer(secondsToShow);
+                return;
             }
-            {
-                PopUpGrid.Visibility = System.Windows.Visibility.Visible;
-                PopUpGrid.IsEnabled = true;
-                var da = new DoubleAnimation();
-                da.From = PopUpGrid.Opacity;
-                da.To = 100;
-                da.Duration = new Duration(TimeSpan.FromSeconds(20));
-                PopUpGrid.BeginAnimation(OpacityProperty, da);
-            }
+            this.Tcs = new TaskCompletionSource<bool>();
 
-            Timer.Start();
+            this.Message.Content = message;
+            this.Message.Foreground = new SolidColorBrush(color);
+
+            this.BeginAnimation(OpacityProperty, new DoubleAnimation(this.Opacity, 100, new Duration(TimeSpan.FromSeconds(20))));
+
+            this.PopUpGrid.Visibility = Visibility.Visible;
+            this.PopUpGrid.IsEnabled = true;
+            this.PopUpGrid.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 100, new Duration(TimeSpan.FromSeconds(20))));
+
+            this.initializeTimer(secondsToShow);
+            await this.Tcs.Task;
         }
 
-        private void PopUpGrid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            this.HideMessage(false);
-        }
-
-        private void Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (PopUpGrid.IsEnabled) HideMessage(false);
-        }
+        void PopUpGrid_MouseDown(object sender, MouseButtonEventArgs e) { this.hideMessage(false); }
+        void Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) { if (this.PopUpGrid.IsEnabled) this.hideMessage(false); }
     }
 }
